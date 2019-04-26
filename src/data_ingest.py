@@ -10,14 +10,16 @@ import logging
 import argparse
 import re
 from pathlib import Path
+from tqdm import tqdm
 import mysql.connector
+from sqlalchemy import create_engine
 
 from db_functions import create_dataset_tables, insert_rows
 
 
 SCRIPT_PATH = os.path.dirname(__file__)  # Script directory
-HOLIDAY_READ_PATH = os.path.join(SCRIPT_PATH, '../data/raw/power-laws-forecasting-energy-consumption-holidays.csv')
-WEATHER_READ_PATH = os.path.join(SCRIPT_PATH, '../data/raw/power-laws-forecasting-energy-consumption-weather.csv')
+HOLIDAY_READ_PATH = os.path.join(SCRIPT_PATH, '../data/raw/power-laws-forecasting-energy-consumption-holidays-no-dups.csv')
+WEATHER_READ_PATH = os.path.join(SCRIPT_PATH, '../data/raw/power-laws-forecasting-energy-consumption-weather-no-dups.csv')
 TRAINING_READ_PATH = os.path.join(SCRIPT_PATH, '../data/raw/power-laws-forecasting-energy-consumption-training-data.csv')
 # WEATHER_READ_PATH = os.path.join(SCRIPT_PATH, '../data/interim/site-1-weather.csv')
 WRITE_PATH = os.path.join(SCRIPT_PATH, '../data/interim/')
@@ -90,22 +92,19 @@ class DataIngest(object):
         Ingest from csv
         :param site_id: The Site ID
         """
-        #self.connect_to_database('esschema')
+        self.connect_to_database('esschema')
         #create_dataset_tables(self.connection)
-        self.data_holidays = pd.read_csv(HOLIDAY_READ_PATH, sep=';')
-        # data_holiday_headers = ','.join(list(self.data_holidays.columns))
+        self.data_holidays = pd.read_csv(HOLIDAY_READ_PATH, sep=',')
         data_holiday_rows = [tuple(row) for row in self.data_holidays.values]
         #insert_rows(self.connection, 'esschema', 'holiday1', 'Holiday_date, Holiday, SiteId',
         #            data_holiday_rows, '%s, %s, %s', logger=self.logger)
         self.data_weather = pd.read_csv(WEATHER_READ_PATH, sep=';')
-        #data_weather_headers = ','.join(list(self.data_weather.columns))
         weather_data_rows = [tuple(row) for row in self.data_weather.values]
         self.training_data = pd.read_csv(TRAINING_READ_PATH, sep=";")
         training_data_rows = [tuple(row) for row in self.training_data.values]
-        # self.logger.debug(weather_data_rows)
         #insert_rows(self.connection, 'esschema', 'weather1', 'Timestamp,Temperature,Distance,SiteId',
         #            weather_data_rows, '%s, %s, %s, %s', logger=self.logger)
-        #self.connection.close()
+        self.connection.close()
 
 
     def wrangle(self):
@@ -120,9 +119,9 @@ class DataIngest(object):
                 self.logger.info("Wrangling Site ID {}".format(site))
                 weather_data_by_site['Date'] = weather_data_by_site['Timestamp'].apply(self.convert_to_date)
                 training_data_by_site['Date'] = training_data_by_site['Timestamp']
-                merged_dataset = pd.merge(holiday_data_by_site, weather_data_by_site,
+                merged_dataset = pd.merge(training_data_by_site, holiday_data_by_site,
                                           on='Date', how='outer')
-                self.dataset = pd.merge(merged_dataset, training_data_by_site,
+                self.dataset = pd.merge(merged_dataset, weather_data_by_site,
                                         on='Date', how='outer')
                 self.dataset = self.dataset[pd.isna(self.dataset['Value']) == False]
                 self.dataset['HolidayCode'] = self.dataset['Holiday'].apply(self.get_holiday_code)
@@ -135,11 +134,20 @@ class DataIngest(object):
                 self.write_records_to_file(training_data_by_site, training_file_name)
                 self.write_records_to_file(self.dataset, merged_file_name)
 
+    def chunker(self, seq, size):
+        # from http://stackoverflow.com/a/434328
+        return (seq[pos:pos + size] for pos in xrange(0, len(seq), size))
+
     def merge_csvs(self):
         """
         Merge all CSVs
         """
         site_ids  = []
+        eng_str = 'mysql+mysqldb://{0}:{1}@{2}/{3}'.format('ebuser1',
+                                                           'ebuser1',
+                                                           '35.227.50.121',
+                                                           'esschema')
+        engine = create_engine(eng_str, pool_recycle=3600, echo=False)
         for site in range(0, 350):
             filename = self.generate_file_name(site, 'training-weather-holiday')
             if os.path.isfile(WRITE_PATH+filename):
@@ -149,7 +157,21 @@ class DataIngest(object):
         # self.logger.debug(site_ids)
         # self.logger.debug(self.filenames)
         combined_csv = pd.concat([pd.read_csv(WRITE_PATH+f, sep=',') for f in self.filenames])
+        #site_csv = pd.read_csv(WRITE_PATH+'site-1-training-weather-holiday.csv', sep=',')
+        columns = ['SiteId_x', 'SiteId_y']
+        #site_csv.drop(columns, inplace=True, axis=1)
+        combined_csv.drop(columns, inplace=True, axis=1)
+        self.logger.info(combined_csv.head())
         combined_csv.to_csv(WRITE_PATH+"site-all-training-weather-holiday.csv", index=False)
+        #combined_csv.to_sql(con=engine, name='site_all_training_weather_holiday',
+        #                    if_exists='replace', index=False)
+        chunksize = int(len(combined_csv) / 1000) # 10%
+        with tqdm(total=len(combined_csv)) as pbar:
+            for i, cdf in enumerate(self.chunker(combined_csv, chunksize)):
+                # replace = "replace" if i == 0 else "append"
+                cdf.to_sql(con=engine, name='site_all_training_weather_holiday',
+                           if_exists='replace', index=False)
+                pbar.update(chunksize)
 
     @property
     def sites_count(self):
