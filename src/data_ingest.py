@@ -40,7 +40,7 @@ class DataIngest(object):
         self.dataset = None
         self.filenames = []
         self.connection = None
-        self.holiday_codes = {'Christmas Day': 0, 'Columbus Day': 1,
+        self.holiday_codes = {'Christmas Day': 25, 'Columbus Day': 1,
                               'Fraternal Day': 1, 'American Indian Heritage Day': 1,
                               'Veterans Day': 2, 'Confederate Memorial Day': 2,
                               'Memorial Day': 3, 'Labor Day': 4, 'George Washington': 5,
@@ -73,7 +73,13 @@ class DataIngest(object):
         """
         :param holiday:
         """
-        return self.holiday_codes.get(holiday, -1)
+        return self.holiday_codes.get(holiday, 0)
+
+    def date_integer(self, date):
+        """
+        :param Date:
+        """
+        return int(date.replace('-',''))
 
     def generate_file_name(self, site_id, data_type):
         return "site-{}-{}.csv".format(site_id, data_type)
@@ -92,8 +98,8 @@ class DataIngest(object):
         Ingest from csv
         :param site_id: The Site ID
         """
-        self.connect_to_database('esschema')
-        #create_dataset_tables(self.connection)
+        # self.connect_to_database('esschema')
+        # create_dataset_tables(self.connection)
         self.data_holidays = pd.read_csv(HOLIDAY_READ_PATH, sep=',')
         data_holiday_rows = [tuple(row) for row in self.data_holidays.values]
         #insert_rows(self.connection, 'esschema', 'holiday1', 'Holiday_date, Holiday, SiteId',
@@ -104,7 +110,7 @@ class DataIngest(object):
         training_data_rows = [tuple(row) for row in self.training_data.values]
         #insert_rows(self.connection, 'esschema', 'weather1', 'Timestamp,Temperature,Distance,SiteId',
         #            weather_data_rows, '%s, %s, %s, %s', logger=self.logger)
-        self.connection.close()
+        #self.connection.close()
 
 
     def wrangle(self):
@@ -124,7 +130,9 @@ class DataIngest(object):
                 self.dataset = pd.merge(merged_dataset, weather_data_by_site,
                                         on='Date', how='outer')
                 self.dataset = self.dataset[pd.isna(self.dataset['Value']) == False]
+                self.dataset = self.dataset[pd.isna(self.dataset['SiteId']) == False]
                 self.dataset['HolidayCode'] = self.dataset['Holiday'].apply(self.get_holiday_code)
+                self.dataset['date_numeric'] = self.dataset['Date'].apply(self.date_integer)
                 holiday_file_name = self.generate_file_name(site, 'holiday')
                 weather_file_name = self.generate_file_name(site, 'weather')
                 training_file_name = self.generate_file_name(site, 'training')
@@ -158,20 +166,20 @@ class DataIngest(object):
         # self.logger.debug(self.filenames)
         combined_csv = pd.concat([pd.read_csv(WRITE_PATH+f, sep=',') for f in self.filenames])
         #site_csv = pd.read_csv(WRITE_PATH+'site-1-training-weather-holiday.csv', sep=',')
-        columns = ['SiteId_x', 'SiteId_y']
+        columns = ['SiteId_x', 'SiteId_y', 'Timestamp_x','Timestamp_y', "Unnamed: 0"]
         #site_csv.drop(columns, inplace=True, axis=1)
         combined_csv.drop(columns, inplace=True, axis=1)
         self.logger.info(combined_csv.head())
         combined_csv.to_csv(WRITE_PATH+"site-all-training-weather-holiday.csv", index=False)
         #combined_csv.to_sql(con=engine, name='site_all_training_weather_holiday',
         #                    if_exists='replace', index=False)
-        chunksize = int(len(combined_csv) / 1000) # 10%
-        with tqdm(total=len(combined_csv)) as pbar:
-            for i, cdf in enumerate(self.chunker(combined_csv, chunksize)):
-                # replace = "replace" if i == 0 else "append"
-                cdf.to_sql(con=engine, name='site_all_training_weather_holiday',
-                           if_exists='replace', index=False)
-                pbar.update(chunksize)
+        # chunksize = int(len(combined_csv) / 1000) # 10%
+        #with tqdm(total=len(combined_csv)) as pbar:
+        #    for i, cdf in enumerate(self.chunker(combined_csv, chunksize)):
+        #        # replace = "replace" if i == 0 else "append"
+        #        cdf.to_sql(con=engine, name='site_all_training_weather_holiday',
+        #                   if_exists='replace', index=False)
+        #        pbar.update(chunksize)
 
     @property
     def sites_count(self):
