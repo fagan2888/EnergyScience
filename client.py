@@ -5,7 +5,7 @@ from utilities import get_building_id, get_location_id, get_lat_lng, starting_da
 class TemperatureClient(object):
     def __init__(self, url):
         self.base_url = url
-        self.token = '0b42d5bd80493103378180d6526c6e**'
+        self.token = '0b42d5bd80493103378180d6526c6ef2'
         self.cache = {}
 
     def get_data(self, path, params=None):
@@ -32,7 +32,8 @@ if __name__ == '__main__':
     start_date = starting_date()
     end_date = start_date + year()
     # locations = ['USA_AK_FAIRBANKS', 'USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE']
-    locations = ['USA_AK_FAIRBANKS','USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE']
+    # locations = ['USA_AK_FAIRBANKS','USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE']
+    locations = ['USA_NV_LAS_VEGAS', 'USA_CA_SAN_FRANCISCO', 'USA_AZ_PHOENIX', 'USA_GA_ATLANTA', 'USA_MD_BALTIMORE', 'USA_CO_BOULDER']
     for location in locations:
         temperature_client.cache = {}
         coordinates = get_lat_lng(location)

@@ -78,12 +78,18 @@ def get_location_id(location):
 
 def get_lat_lng(location):
     locations = {
-        'USA_AK_FAIRBANKS': '64.83778, -147.71639' ,
+        'USA_AK_FAIRBANKS': '64.83778, -147.71639',
         'USA_CA_LOS_ANGELES': '34.05223, -118.24368',
         'USA_IL_CHICAGO-OHARE': '41.85003, -87.65005',
         'USA_MN_MINNEAPOLIS': '44.97997, -93.26384',
         'USA_TX_HOUSTON': '29.76328, -95.36327',
-        'USA_WA_SEATTLE': '47.60621, -122.33207'
+        'USA_WA_SEATTLE': '47.60621, -122.33207',
+        'USA_NV_LAS_VEGAS': '36.17497, -115.13722',
+        'USA_CA_SAN_FRANCISCO': '37.77493, -122.41942',
+        'USA_AZ_PHOENIX': '33.44838, -112.07404',
+        'USA_GA_ATLANTA': '33.749, -84.38798',
+        'USA_MD_BALTIMORE': '39.29038, -76.61219',
+        'USA_CO_BOULDER': '40.01499, -105.27055'
     }
     return locations.get(location)
 
