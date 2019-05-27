@@ -8,4 +8,5 @@ This project will attempt to build a model that forecasts thermal load for a bui
 - RidgeCV is the best model so far
 - Hyperparameter tuning (Alpha value)
 - Story/Paper and slides
+- Maybe a model per city (tentative)
 
