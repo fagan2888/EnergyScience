@@ -3,8 +3,9 @@ Cohort 14 Capstone Project for the Certificate of Data Science at Georgetown Uni
 This project will attempt to build a model that forecasts thermal load for a building.
 
 # TODO
-- More feature selection
-- Model evaluation
-- Lasso is the best model
+- Evaluate SVM
+- More Feature Analysis
+- RidgeCV is the best model so far
+- Hyperparameter tuning (Alpha value)
 - Story/Paper and slides
 
