@@ -22,3 +22,6 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 - * Story/Paper and slides
 - Maybe a model per city (tentative)
 
+We can use:
+LinearRegression(normalize=True)
+
