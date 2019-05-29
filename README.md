@@ -13,6 +13,7 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 #### Passed the dataset through different models to evaluate r2 score and rmse
 #### Used Regularization methods to prevent model overfitting
 #### The best performing models so far were RidgeCV and Lasso
+#### Added a model for the City of Seattle
 
 # TODO
 - * Evaluate SVM
@@ -20,7 +21,6 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 - * Model evaluation with YellowBrick
 - Hyperparameter tuning (Alpha value)
 - * Story/Paper and slides
-- Maybe a model per city (tentative)
 
 We can use:
 LinearRegression(normalize=True)
