@@ -18,6 +18,8 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 # TODO
 - * Evaluate SVM
 - More Feature Analysis/EDA
+** Heat maps, Day/Month/temperature
+** visualizing the model with data points based on Energy consumption vs temperature
 - * Model evaluation with YellowBrick
 - Hyperparameter tuning (Alpha value)
 - * Story/Paper and slides
