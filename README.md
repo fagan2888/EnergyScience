@@ -5,6 +5,16 @@ This project will attempt to build a model that forecasts thermal load for a bui
 ## Data instance
 Given the Cooling load, heating load, and various other energy consumption sources like Fans, interior equipment/lights, weather conditions like temperature, builing information like type/location and holiday information, can we predict the overall energy load in a building on a given day
 
+### Data instance - Part 2
+Given the Cooling Load, heating load, Fans,interior equipment/lights, weather conditions like temperature, builing information like type/location and holiday information, predict the next day's energy consumption.
+
+
+- Cooling load, Heating, Fans, interior, lights, building, location, Energy, timestamp
+
+- Cooling load (T-1), Heating (T-1), Fans (T-1), interior (T-1), lights (T-1), building, location, Energy (T)
+
+- Cooling load (T), Heating (T), Fans (T), interior (T), lights (T), building, location, Energy (T + 1)
+
 ### Steps completed
 #### Collected the energy consumption data, building metadata, weather data and holiday data for 2004
 #### Merged all of these datasets and stored the wrangled dataset in csv
@@ -14,12 +24,11 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 #### Used Regularization methods to prevent model overfitting
 #### The best performing models so far were RidgeCV and Lasso
 #### Added a model for the City of Seattle
+#### Heat maps, Day/Month/temperature
+#### visualizing the model with data points based on Energy consumption vs temperature
 
 # TODO
 - * Evaluate SVM
-- More Feature Analysis/EDA
--- Heat maps, Day/Month/temperature
--- visualizing the model with data points based on Energy consumption vs temperature
 - * Model evaluation with YellowBrick
 - Hyperparameter tuning (Alpha value)
 - * Story/Paper and slides
