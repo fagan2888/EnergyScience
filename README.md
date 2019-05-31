@@ -36,3 +36,5 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 We can use:
 LinearRegression(normalize=True)
 
+Need to use database tables for storing and retrieving data
+
