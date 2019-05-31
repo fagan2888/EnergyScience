@@ -21,7 +21,7 @@ def get_month(date):
     Return the month
     :param: Date
     """
-    return date.split('-')[1]
+    return date.split('/')[0]
 
 def string_to_timestamp(timestamp):
     """
