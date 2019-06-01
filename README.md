@@ -28,7 +28,7 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 #### visualizing the model with data points based on Energy consumption vs temperature
 
 # TODO
-- * Evaluate SVM
+- * PCA and Manifold for reducing dimensions into two vectors, to visualize data
 - * Model evaluation with YellowBrick
 - Hyperparameter tuning (Alpha value)
 - * Story/Paper and slides
