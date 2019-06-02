@@ -11,8 +11,6 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 
 - Cooling load, Heating, Fans, interior, lights, building, location, Energy, timestamp
 
-- Cooling load (T-1), Heating (T-1), Fans (T-1), interior (T-1), lights (T-1), building, location, Energy (T)
-
 
 ### Steps completed
 #### Collected the energy consumption data, building metadata, weather data and holiday data for 2004
