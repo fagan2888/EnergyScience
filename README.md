@@ -13,7 +13,6 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 
 - Cooling load (T-1), Heating (T-1), Fans (T-1), interior (T-1), lights (T-1), building, location, Energy (T)
 
-- Cooling load (T), Heating (T), Fans (T), interior (T), lights (T), building, location, Energy (T + 1)
 
 ### Steps completed
 #### Collected the energy consumption data, building metadata, weather data and holiday data for 2004
@@ -26,6 +25,7 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 #### Added a model for the City of Seattle
 #### Heat maps, Day/Month/temperature
 #### visualizing the model with data points based on Energy consumption vs temperature
+#### Cooling load (T), Heating (T), Fans (T), interior (T), lights (T), building, location, Energy (T + 1), Energy(T-1), delta((T), (T-1))
 
 # TODO
 - * PCA and Manifold for reducing dimensions into two vectors, to visualize data
