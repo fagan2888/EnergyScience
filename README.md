@@ -28,7 +28,6 @@ Given the Cooling Load, heating load, Fans,interior equipment/lights, weather co
 # TODO
 - * PCA and Manifold for reducing dimensions into two vectors, to visualize data
 - * Model evaluation with YellowBrick
-- Hyperparameter tuning (Alpha value)
 - * Story/Paper and slides
 
 We can use:
