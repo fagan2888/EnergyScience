@@ -10,8 +10,8 @@ Given the Cooling load, heating load, and various other energy consumption sourc
 ```
 pip install requirements.txt
 Unzip data1.zip under the data directory
-Create a Dark Sky API account
-Add the Dark Sky API token in temperature_client.py <TOKEN>
+Create a Dark Sky API account (optional)
+Add the Dark Sky API token in temperature_client.py <TOKEN> (optional)
 ```
 
 ## Data Ingestion and Wrangling
@@ -19,7 +19,7 @@ Add the Dark Sky API token in temperature_client.py <TOKEN>
 To collect temperature statistics, execute
 
 ```
-python temperature_client.py
+python temperature_client.py (optional, to generate raw temperature data)
 ```
 
 To consume raw data and generate interim datasets
