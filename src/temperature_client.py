@@ -49,4 +49,4 @@ if __name__ == '__main__':
             current_date = current_date + time_delta()
         data = temperature_client.get_cache()
         temperature_data = pd.DataFrame.from_dict(data)
-        temperature_data.to_csv('data/data1/interim/'+location+'_temperature_usage.csv')
+        temperature_data.to_csv('../data/data1/interim/'+location+'_temperature_usage.csv')
