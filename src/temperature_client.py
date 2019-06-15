@@ -1,5 +1,11 @@
 import requests
 import pandas as pd
+import sys
+module_path = os.path.abspath(os.path.join(os.pardir, os.pardir))
+if module_path not in sys.path:
+    sys.path.append(module_path)
+print(sys.path)
+
 from utilities import get_building_id, get_location_id, get_lat_lng, starting_date, time_delta, year
 
 class TemperatureClient(object):
@@ -31,9 +37,8 @@ if __name__ == '__main__':
     properties = ['time', 'sunriseTime', 'sunsetTime', 'temperatureHigh', 'dewPoint', 'humidity', 'windSpeed', 'cloudCover']
     start_date = starting_date()
     end_date = start_date + year()
-    # locations = ['USA_AK_FAIRBANKS', 'USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE']
-    # locations = ['USA_AK_FAIRBANKS','USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE']
-    locations = ['USA_NV_LAS_VEGAS', 'USA_CA_SAN_FRANCISCO', 'USA_AZ_PHOENIX', 'USA_GA_ATLANTA', 'USA_MD_BALTIMORE', 'USA_CO_BOULDER']
+    locations = ['USA_AK_FAIRBANKS', 'USA_CA_LOS_ANGELES', 'USA_IL_CHICAGO-OHARE', 'USA_MN_MINNEAPOLIS', 'USA_TX_HOUSTON', 'USA_WA_SEATTLE',
+                 'USA_NV_LAS_VEGAS', 'USA_CA_SAN_FRANCISCO', 'USA_AZ_PHOENIX', 'USA_GA_ATLANTA', 'USA_MD_BALTIMORE', 'USA_CO_BOULDER']
     for location in locations:
         temperature_client.cache = {}
         coordinates = get_lat_lng(location)
@@ -44,4 +49,4 @@ if __name__ == '__main__':
             current_date = current_date + time_delta()
         data = temperature_client.get_cache()
         temperature_data = pd.DataFrame.from_dict(data)
-        temperature_data.to_csv('data/'+location+'_temperature_usage.csv')
+        temperature_data.to_csv('data/data1/interim/'+location+'_temperature_usage.csv')
