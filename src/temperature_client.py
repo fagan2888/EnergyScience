@@ -11,7 +11,7 @@ from utilities import get_building_id, get_location_id, get_lat_lng, starting_da
 class TemperatureClient(object):
     def __init__(self, url):
         self.base_url = url
-        self.token = '0b42d5bd80493103378180d6526c6***'
+        self.token = '<TOKEN>'
         self.cache = {}
 
     def get_data(self, path, params=None):
